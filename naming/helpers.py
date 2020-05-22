@@ -26,7 +26,7 @@ def book_name_addrs(nms):
 
 
 def add_named_range(bk: xw.Book, rng: xw.Range, nm: str):
-    bk.names.add(nm, rng)
+    bk.names.add(nm, '=' + rng.get_address(include_sheetname=True))
 
 
 def delete_named_range(bk: xw.Book, nm: str):
