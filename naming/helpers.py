@@ -38,3 +38,4 @@ def delete_named_range(bk: xw.Book, nm: str):
 def rename_named_range(bk: xw.Book, prev_nm: str, new_nm: str):
     nm_rng: xw.Name = bk.names[prev_nm]
     nm_rng.name = new_nm
+
