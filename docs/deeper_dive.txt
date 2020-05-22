@@ -1,0 +1,20 @@
+FOREWARD:
+As of now 04/25/2020, the scope of texel is narrowly limited to the "backend"
+of the inner workings of an Excel Spreadsheet/Model. I am not a front end designer
+and would take anything I would say with a grain of salt when it comes to the presentation
+of a spreadsheet. Visual taste is very subjective.
+
+Far too often I will receive a spreadsheet either from a coworker or external
+member and spend far too long chasing down references which may be on other tabs
+or very distant positions on the same worksheet.
+
+Rather than focusing on concepts, most time is devoted to understanding how
+an individual is designing their spreadsheet.
+
+Spreadsheets by their very nature a prone to this sort of pitfall due to their spatial
+nature. Unlike the code found in a modern OOP programming laguage (Java, C#, Python) which
+can be read more like a traditional set of instructions and relationships, "code" in excel
+often becomes densely nested with hard to read conditionals, rigid due to position based
+formulas (vlookups should never be used for this reason), and time consuming with the constant
+movement required to fully understand the variables being referenced.
+

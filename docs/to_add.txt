@@ -1,0 +1,9 @@
+HIGH LEVEL - FURTHER DOWN
+Class API that combines features.
+
+
+
+FEATURES
+ - Read only recommended.
+ - Util to open workbook. xw.Book() causes issues. DONE
+ - 

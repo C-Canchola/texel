@@ -1,0 +1,39 @@
+The mission of texel is to provide a framework for the 
+design and creation of easily traceable Excel spreadsheets.
+
+The inspiration comes from the design philosphies of Bob Martin and the
+Zen of Python.
+
+Essential Readings:
+    - Clean Code by Bob Martin
+    - Clean Architecture by Bob Martin
+    - The Zen of Python
+
+Core princicples of texel borrowed from the essential readings.
+    
+    From the Zen of Python:
+    - Beautiful is better than ugly.
+    - Explicit is better than implicit
+    - Simple is better than complex
+    - READABILITY COUNTS
+    - The should be one-- and preferably only one --obvious way to do it.
+    - Namespaces are one honking great idea -- let's do more of those!
+
+    From Clean Code:
+    - Be consistent. If you do something a certain way, do all similar things in the same way.
+    - Follow standard conventions.
+    - Keep it simple stupid. Simpler is always better. Reduce complexity as much as possible.
+    - Boy scout rule. Leave the campground cleaner than you found it.
+    - Use explanatory variables.
+    - Choose descriptive and unambiguous names.
+    - Use searchable names.
+    - Replace magic numbers with named constants.
+    - Functions should be:
+        -- Small
+        -- Do one thing
+        -- Use descriptive names
+        -- Prefer fewer arguments
+    
+
+In summation, the goal is to develop a framework that abides by these principles when
+designing reusable spreadsheets that will most likely be passed of to a future team member.
