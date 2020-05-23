@@ -47,7 +47,7 @@ def stop_if_col_empty(func):
     return inner_func
 
 
-@register_type_func(SCALAR_INPUT, NAMED_RANGE_ADDRESS_FUNCS)
+@register_type_func(SCALAR_INPUT.index, NAMED_RANGE_ADDRESS_FUNCS)
 @stop_if_row_empty
 def get_scalar_ranges_to_name(sht: xw.Sheet):
     """Returns a list containing the address of each filled row in the value (2nd) column
@@ -62,7 +62,7 @@ def get_scalar_ranges_to_name(sht: xw.Sheet):
     return ['{}!$B${}'.format(sht_nm, i) for i in range(2, stop)]
 
 
-@register_type_func(SCALAR_INPUT, NAMED_RANGE_NAME_FUNCS)
+@register_type_func(SCALAR_INPUT.index, NAMED_RANGE_NAME_FUNCS)
 @stop_if_row_empty
 def get_scalar_names(sht: xw.Sheet):
     """Returns a list of 
@@ -79,7 +79,7 @@ def get_scalar_names(sht: xw.Sheet):
     return ['{}__{}'.format(sht_nm, value) for value in values]
 
 
-@register_type_func(STANDARD_ROW_OPERATION, NAMED_RANGE_ADDRESS_FUNCS)
+@register_type_func(STANDARD_ROW_OPERATION.index, NAMED_RANGE_ADDRESS_FUNCS)
 @stop_if_col_empty
 def get_standard_row_ranges_to_name(sht: xw.Sheet):
 
@@ -91,7 +91,7 @@ def get_standard_row_ranges_to_name(sht: xw.Sheet):
             for i in range(1, stop)]
 
 
-@register_type_func(STANDARD_ROW_OPERATION, NAMED_RANGE_NAME_FUNCS)
+@register_type_func(STANDARD_ROW_OPERATION.index, NAMED_RANGE_NAME_FUNCS)
 @stop_if_col_empty
 def get_standard_row_names(sht: xw.Sheet):
 

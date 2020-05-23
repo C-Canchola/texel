@@ -1,31 +1,17 @@
 import xlwings as xw
 import texel.naming as txl_nm
-
-from functools import wraps
+import texel.api.name_manager.range_getters as rng_getters
 
 REF_ERROR_SUBSTRS = ['=#REF', '!#REF']
 
 
-def nm_str_is_ref_err(nm_str):
+def refers_to_is_ref_err(refers_to_str):
 
     for substr in REF_ERROR_SUBSTRS:
-        if substr in nm_str:
+        if substr in refers_to_str:
             return True
 
     return False
-
-
-def repopulate_if_needed(func):
-
-    @wraps(func)
-    def inner_func(self, *args, **kwargs):
-
-        if self.names_to_repopulate:
-            NameManager.repopulate_nms(self)
-
-        return func(self, *args, **kwargs)
-
-    return inner_func
 
 
 class NameManager:
@@ -40,11 +26,12 @@ class NameManager:
         self.nm_nm_strs = []
         self.names_to_repopulate = True
 
-    @repopulate_if_needed
-    def get_ref_error_nms(self):
-        return [nm_str for nm_str, nm_addr in zip(self.nm_nm_strs, self.nm_addr_strs)
-                if nm_str_is_ref_err(nm_addr)]
+    def convert_nr_names_to_refers_to(self, nms):
+        return [self.bk.names(nm).refers_to for nm in nms]
 
-    def repopulate_nms(self):
-        self.nm_addr_strs = [nm.refers_to for nm in self.bk.names]
-        self.nm_nm_strs = [nm.name for nm in self.bk.names]
+    def get_ref_err_nms_to_delete(self, nms):
+        refers_to_list = self.convert_nr_names_to_refers_to(nms)
+        return [nm for nm, refers_to in zip(nms, refers_to_list) if refers_to_is_ref_err(refers_to)]
+
+    def get_list_of_potential_names(self, sht_nm, sht_type):
+        return rng_getters.get_names_and_addresses(self.bk.sheets[sht_nm], sht_type)

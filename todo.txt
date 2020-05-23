@@ -15,5 +15,6 @@ NAME_MANAGER - This will have to respond to changes made by the SHEET_TRACKER as
 
 
 TO ADD:
-
-process for determining which ranges are 
+When adding a sheet, include the formula =SHEET(first_cell of sheet) in order to keep strack if the
+sheet exists and whether or not their names match what is given.
+    -- Essentially a way to keep a pointer/reference to a sheet by using Excel itself.

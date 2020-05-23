@@ -6,7 +6,6 @@ from texel.book import get_sheet, get_names_of_sheets
 from texel.constants import Color
 from texel.api.types import sheet_types
 
-
 def format_after_call(func):
 
     @wraps(func)
@@ -22,7 +21,7 @@ def format_after_call(func):
 
 class SheetTracker:
 
-    SHEET_NAME = 'TEXEL_SHEET_TRACKER'
+    SHEET_NAME = 'TXL_SHEET_TRACKER'
 
     KEY_SHEET_NAME = 'sheet_name'
     KEY_DESCR = 'descr'
@@ -52,7 +51,7 @@ class SheetTracker:
     def remove_sheet(self, sht_nm, delete=False):
         """Removes a sheet name from tracking sheet.
         Optionally, the sheet can be removed from the workbook as well.
-
+        Very strong possibility that I remove this feature.
         Arguments:
             sht_nm {[type]} -- name of sheet to delete.
 
