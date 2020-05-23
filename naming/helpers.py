@@ -1,7 +1,7 @@
 import xlwings as xw
 
 
-def book_name_strings(nms):
+def book_name_strings(bk):
     """Returns a list of the named range names in
     as workbook.
 
@@ -11,7 +11,7 @@ def book_name_strings(nms):
     Returns:
         list -- named range names.
     """
-    return [nm.name for nm in nms]
+    return [nm.name for nm in bk.names]
 
 
 def book_name_addrs(nms):

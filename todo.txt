@@ -9,3 +9,11 @@ either worksheets or the named ranges.
 SHEET_TRACKER - This will handle any changes to the worksheets.
 
 NAME_MANAGER - This will have to respond to changes made by the SHEET_TRACKER as well as handle the ability to change at a lower level.
+
+
+
+
+
+TO ADD:
+
+process for determining which ranges are 
