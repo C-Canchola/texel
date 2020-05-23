@@ -1,7 +1,7 @@
 class SheetType:
 
     def __init__(self, index, name, description):
-        self.index = 0
+        self.index = index
         self.name = name
         self.description = description
 

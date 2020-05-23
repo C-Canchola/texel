@@ -14,6 +14,30 @@ def book_name_strings(bk):
     return [nm.name for nm in bk.names]
 
 
+def book_name_strings_with_sheet_name_filter(bk: xw.Book, sht_nm: str):
+    """Returns a list of named range names who's range refers
+    to the sheet with the given sheet name.
+
+    Arguments:
+        bk {xw.Book} -- The book to check the named ranges
+        sht_nm {str} -- The sheet name used for filtering.
+
+    TODO
+    Optimize later. Pre-mature optimization is not worth it right now.
+    """
+
+    check_strs = [sht_nm, "'{}'".format(sht_nm)]
+
+    def check_nm(nm: xw.Name):
+        check_nm = nm.refers_to[1:]
+        for check_str in check_strs:
+            if check_nm.startswith(check_str):
+                return True
+        return False
+
+    return [nm.name for nm in bk.names if check_nm(nm)]
+
+
 def book_name_addrs(nms):
     """Returns a list of the named range addresses in a workbook.
 

@@ -4,6 +4,7 @@ import pandas as pd
 from functools import wraps
 from texel.book import get_sheet, get_names_of_sheets
 from texel.constants import Color
+from texel.api.types import sheet_types
 
 
 def format_after_call(func):
@@ -25,8 +26,9 @@ class SheetTracker:
 
     KEY_SHEET_NAME = 'sheet_name'
     KEY_DESCR = 'descr'
+    KEY_TYPE = 'sheet_type'
 
-    KEYS = [KEY_SHEET_NAME, KEY_DESCR]
+    KEYS = [KEY_SHEET_NAME, KEY_DESCR, KEY_TYPE]
 
     def __init__(self, bk: xw.Book):
         self._bk = bk
@@ -70,7 +72,7 @@ class SheetTracker:
 
         self._update_info_df(df)
 
-    def add_sheet(self, sht_nm: str, descr: str):
+    def add_sheet(self, sht_nm: str, descr: str, sht_type: sheet_types.SheetType):
         """Adds a sheet to the tracker sheeet.
         If the sheet name does not exist, a new sheet will be added to the entire workbook.
 
@@ -85,7 +87,7 @@ class SheetTracker:
             return self._bk.sheets[sht_nm]
 
         add_df = pd.DataFrame.from_records(
-            [(sht_nm, descr)], columns=SheetTracker.KEYS)
+            [(sht_nm, descr, sht_type.index)], columns=SheetTracker.KEYS)
         df = pd.concat([df, add_df])
 
         self._update_info_df(df)
@@ -132,3 +134,7 @@ class SheetTracker:
 
         for i in range(len(df)):
             print(df.iloc[[i]])
+
+    def get_sheet_name_and_type_dict(self):
+        df: pd.DataFrame = self._get_info_df()
+        return dict(zip(df[SheetTracker.KEY_SHEET_NAME], df[SheetTracker.KEY_TYPE]))
