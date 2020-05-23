@@ -11,7 +11,7 @@ def test_open_book_from_path():
 
     assert isinstance(bk, xw.Book)
 
-    bk.close()
+    
 
 
 def test_open_by_from_name():
@@ -24,7 +24,7 @@ def test_open_by_from_name():
 
     assert isinstance(nm_bk, xw.Book)
 
-    nm_bk.close()
+    
 
 
 def test_get_by_path_twice():
