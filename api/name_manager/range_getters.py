@@ -8,6 +8,7 @@ SCALAR_INPUT = txl_sht_types.SCALAR_INPUT
 VALID_TYPES = [SCALAR_INPUT]
 
 
+
 def stop_if_empty(func):
 
     @wraps(func)
@@ -49,3 +50,5 @@ def get_scalar_names(sht: xw.Sheet):
     sht_nm = sht.name
 
     return ['{}__{}'.format(sht_nm, value) for value in values]
+
+
