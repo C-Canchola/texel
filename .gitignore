@@ -1,4 +1,4 @@
 **/*$*.xlsx
 **/nbk*.py
-**/__pycache__/
+**/__pycache__/*
 **/*.pyc
