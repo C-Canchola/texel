@@ -11,6 +11,8 @@ def test_open_book_from_path():
 
     assert isinstance(bk, xw.Book)
 
+    bk.close()
+
 
 def test_open_by_from_name():
 
@@ -21,3 +23,13 @@ def test_open_by_from_name():
     nm_bk = book.get_bk(nm)
 
     assert isinstance(nm_bk, xw.Book)
+
+    nm_bk.close()
+
+
+def test_get_by_path_twice():
+
+    path_bk = book.get_bk(constants.TEST_FILE_PATH)
+    sec_bk = book.get_bk(constants.TEST_FILE_PATH)
+
+    assert path_bk.name == sec_bk.name
