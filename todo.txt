@@ -1,1 +1,11 @@
-Add helper functions to work with ranges.
+Work on a name manager that can add/remove/update named ranges.
+
+
+Idea for pipeline of changes.
+
+VALIDATION/RULE SET - This is where I will apply naming conventions, validation, etc to any changes to
+either worksheets or the named ranges.
+
+SHEET_TRACKER - This will handle any changes to the worksheets.
+
+NAME_MANAGER - This will have to respond to changes made by the SHEET_TRACKER as well as handle the ability to change at a lower level.

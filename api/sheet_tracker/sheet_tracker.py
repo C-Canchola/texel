@@ -3,6 +3,7 @@ import pandas as pd
 
 from functools import wraps
 from texel.book import get_sheet, get_names_of_sheets
+from texel.constants import Color
 
 
 def format_after_call(func):
@@ -43,6 +44,7 @@ class SheetTracker:
 
     def _reformat(self):
         self._sht.autofit('columns')
+        self._sht.range('a1').current_region[0, ::].color = Color.INDEX
 
     @format_after_call
     def remove_sheet(self, sht_nm, delete=False):
