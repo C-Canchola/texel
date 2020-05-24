@@ -1,8 +1,10 @@
 import xlwings as xw
 import texel.naming as txl_nm
+
 from texel.api.sheet_tracker import SheetTracker
 from texel.api.name_manager import NameManager
 from texel.api.types import sheet_types
+from texel.api.artist import ColorArtist
 from more_itertools import flatten
 
 nm_sht_filter = txl_nm.book_name_strings_with_sheet_name_filter
@@ -34,12 +36,6 @@ class TexlBook:
         return self._name_manager.get_ref_err_nms_to_delete(
             self._get_all_tracked_nr_nms())
 
-    def delete_ref_err_nms(self):
-        """Deletes names that refer to ranges that no longer exist on tracked sheets.
-        """
-        for nm in self._get_track_ref_error_nms():
-            self.bk.names(nm).delete()
-
     def remove_sht_from_tracking(self, sht_nm):
         """Removes a sheet from the tracker sheet.
 
@@ -55,6 +51,18 @@ class TexlBook:
 
     def get_all_potential_nms(self):
         return list(flatten(self.get_sht_potential_nms().values()))
+
+    def color_all_sheets(self):
+
+        for sht_nm, sht_type in self.get_sheet_and_type_dict().items():
+
+            sht_type_index = int(sht_type)
+            sht = self.bk.sheets[sht_nm]
+
+            if sht_type_index == TexlBook.SHEET_TYPE.SCALAR_INPUT:
+                ColorArtist.color_input_sht(sht)
+            if sht_type_index == TexlBook.SHEET_TYPE.STANDARD_ROW_OPERATION:
+                ColorArtist.color_column_calc_sht(sht)
 
     def update_all_names(self):
 

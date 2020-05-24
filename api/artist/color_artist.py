@@ -8,7 +8,7 @@ def _get_first_sht_row(sht: xw.Sheet):
     return sht.range('a1').current_region.options(ndim=1)[0, ::]
 
 
-def stop_on_empty_first_cell(func):
+def _stop_on_empty_first_cell(func):
 
     @wraps(func)
     def inner_func(sht, *args, **kwargs):
@@ -19,7 +19,7 @@ def stop_on_empty_first_cell(func):
     return inner_func
 
 
-@stop_on_empty_first_cell
+@_stop_on_empty_first_cell
 def color_input_sht(sht: xw.Sheet):
 
     input_row = _get_first_sht_row(sht)
@@ -28,7 +28,7 @@ def color_input_sht(sht: xw.Sheet):
     input_row[0, 0].color = Color.INDEX
 
 
-@stop_on_empty_first_cell
+@_stop_on_empty_first_cell
 def color_column_calc_sht(sht: xw.Sheet):
     """Coloring rules for column calc tab.
     Will assume that any header with the word index in it

@@ -8,6 +8,14 @@ class SheetType:
     def __hash__(self):
         return hash(self.index)
 
+    def __eq__(self, other):
+
+        if isinstance(other, int):
+            return self.index == other
+        if isinstance(other, SheetType):
+            return self.index == other.index
+        return False
+
 
 SCALAR_INPUT = SheetType(
     0, "SCALAR_INPUT", "Tab made up entirely from scalar inputs")
