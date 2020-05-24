@@ -1,0 +1,46 @@
+Potential Name and Refers To - P_nm, P_rf
+All Name and Refers To - A_nm, A_rf
+Trackaed Name and Refers To - T_nm, T_rf
+
+CASE 1:
+    P_nm_i and P_rf_i not in A_nm, A_rf
+    Potential name and refers to el does not exist at all in all of the workbook names.
+    SOLUTION:
+        Add to workbook normally by address.
+    
+CASE 2:
+    No Action
+    Potential name and ref has a single match in tracked.
+    Name is already named correctly.
+
+CASE 3:
+    Single Rename
+    Potential name not in tracked name.
+    Potential ref IS in tracked ref
+    Tracked name not in potential name.
+
+    Probably most important to handle correctly as a rename will update and dependent formulas
+    while a delete and addition will not.
+
+    Rename tracked name to potential name.
+
+CASE 4:
+    Swap
+
+    Potential name in tracked name.
+    Potential ref is not equal to tracked name ref
+
+    This means there exists another tracked name with the correct ref
+    and name mismatch.
+
+    Delete other name, name that one correctly (using potential names)
+
+CASE 5:
+    
+    Potential name exists twice.
+
+    ERROR?
+    Or take first?
+
+    Very heavily leaning towards the side of error.
+    Taking first will certainly lead to ambiguity and mistakes in the future.

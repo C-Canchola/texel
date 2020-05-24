@@ -58,7 +58,7 @@ class TexlBook:
 
         potential_nm_list = self.get_all_potential_nms()
         all_nms = all_bk_nm_strs(self.bk)
+        all_tracked_nms = self._get_all_tracked_nr_nms()
 
-        for nm, addr in zip(potential_nm_list[0], potential_nm_list[1]):
-            if nm not in all_nms:
-                add_nm_by_addr(self.bk, addr, nm)
+        self._name_manager.handle_all_naming_cases(
+            potential_nm_list, all_nms, all_tracked_nms)
