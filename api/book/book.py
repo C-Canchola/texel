@@ -56,6 +56,7 @@ class TexlBook:
 
     def update_all_names(self):
 
+        self.delete_ref_err_nms()
         potential_nm_list = self.get_all_potential_nms()
         all_nms = all_bk_nm_strs(self.bk)
         all_tracked_nms = self._get_all_tracked_nr_nms()
