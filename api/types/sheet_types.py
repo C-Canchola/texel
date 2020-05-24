@@ -12,6 +12,8 @@ class SheetType:
 
         if isinstance(other, int):
             return self.index == other
+        if isinstance(other, float):
+            return self.index == int(other)
         if isinstance(other, SheetType):
             return self.index == other.index
         return False

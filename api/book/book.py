@@ -52,17 +52,18 @@ class TexlBook:
     def get_all_potential_nms(self):
         return list(flatten(self.get_sht_potential_nms().values()))
 
+    def full_update(self):
+        """Full update for all the currently tracked sheets.
+        Will update the named ranges as well as apply proper coloring.
+
+        """
+        self.update_all_names()
+        self.color_all_sheets()
+
     def color_all_sheets(self):
 
         for sht_nm, sht_type in self.get_sheet_and_type_dict().items():
-
-            sht_type_index = int(sht_type)
-            sht = self.bk.sheets[sht_nm]
-
-            if sht_type_index == TexlBook.SHEET_TYPE.SCALAR_INPUT:
-                ColorArtist.color_input_sht(sht)
-            if sht_type_index == TexlBook.SHEET_TYPE.STANDARD_ROW_OPERATION:
-                ColorArtist.color_column_calc_sht(sht)
+            ColorArtist.color_typed_sheet(self.bk.sheets[sht_nm], sht_type)
 
     def update_all_names(self):
 

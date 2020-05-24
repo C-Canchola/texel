@@ -2,10 +2,30 @@ import xlwings as xw
 import texel.api.types.sheet_types as txl_sht_types
 from functools import wraps
 from texel.constants.color import Color
+from texel.formatting import sheet_fmt
 
 
 def _get_first_sht_row(sht: xw.Sheet):
     return sht.range('a1').current_region.options(ndim=1)[0, ::]
+
+
+_SHEET_COLOR_FUNCS = {}
+
+
+def register_sheet_color_func(sht_type, tab_color):
+
+    def decorator(func):
+
+        @wraps(func)
+        def inner_func(sht, *args, **kwargs):
+            sheet_fmt.color_sht_tab(sht, tab_color)
+
+            return func(sht, *args, **kwargs)
+
+        _SHEET_COLOR_FUNCS[sht_type] = inner_func
+        return inner_func
+
+    return decorator
 
 
 def _stop_on_empty_first_cell(func):
@@ -19,6 +39,7 @@ def _stop_on_empty_first_cell(func):
     return inner_func
 
 
+@register_sheet_color_func(txl_sht_types.SCALAR_INPUT, Color.INPUT)
 @_stop_on_empty_first_cell
 def color_input_sht(sht: xw.Sheet):
 
@@ -28,6 +49,7 @@ def color_input_sht(sht: xw.Sheet):
     input_row[0, 0].color = Color.INDEX
 
 
+@register_sheet_color_func(txl_sht_types.STANDARD_ROW_OPERATION, Color.CALCULATION)
 @_stop_on_empty_first_cell
 def color_column_calc_sht(sht: xw.Sheet):
     """Coloring rules for column calc tab.
@@ -53,3 +75,15 @@ def color_column_calc_sht(sht: xw.Sheet):
             header_cell.color = Color.INPUT
         else:
             header_cell.color = Color.CALCULATION
+
+
+def color_typed_sheet(sht: xw.Sheet, sht_type):
+    """Colors a worksheet given that is type has a valid registered color function.
+
+    Arguments:
+        sht {xw.Sheet} -- sheet to color
+        sht_type {[type]} -- sheet type.
+    """
+
+    if sht_type in _SHEET_COLOR_FUNCS:
+        _SHEET_COLOR_FUNCS[sht_type](sht)
