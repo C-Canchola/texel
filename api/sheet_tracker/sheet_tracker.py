@@ -6,6 +6,9 @@ from functools import wraps
 from texel.book import get_sheet, get_names_of_sheets
 from texel.constants import Color
 from texel.api.types import sheet_types
+from texel.formatting import (
+    sheet_fmt, range_fmt
+)
 
 
 def format_after_call(func):
@@ -133,7 +136,18 @@ class SheetTracker:
 
     def _reformat(self):
         self._sht.autofit('columns')
-        self._sht.range('a1').current_region[0, ::].color = Color.INDEX
+
+        self._sht.cells.color = Color.BACKGROUND
+
+        top_row = self._sht.range('A1').current_region[0, ::]
+
+        top_row.color = Color.TXL
+        range_fmt.set_bold_font(top_row, True)
+        range_fmt.set_rng_font_color(top_row, Color.LIGHT_TEXT)
+        range_fmt.set_rng_halign(
+            top_row, range_fmt.CONSTANTS_HALIGN.xlHAlignCenter)
+
+        sheet_fmt.color_sht_tab(self._sht, Color.TXL)
 
     @format_after_call
     def remove_sheet(self, sht_nm, delete=False):
