@@ -134,7 +134,7 @@ def handle_all_renames(rename_structs, tracked_structs, bk):
 
 
 def handle_all_swaps(swap_structs, tracked_structs, bk):
-    swap_refs = [swap_struct.refers_to for swpar_struct in swap_structs]
+    swap_refs = [swap_struct.refers_to for swap_struct in swap_structs]
 
     for tracked_struct in tracked_structs:
         if tracked_struct.refers_to in swap_refs:
