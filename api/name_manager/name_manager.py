@@ -3,17 +3,6 @@ import texel.naming as txl_nm
 import texel.api.name_manager.range_getters as rng_getters
 import texel.naming.helpers as nm_helper
 
-REF_ERROR_SUBSTRS = ['=#REF', '!#REF']
-
-
-def refers_to_is_ref_err(refers_to_str):
-
-    for substr in REF_ERROR_SUBSTRS:
-        if substr in refers_to_str:
-            return True
-
-    return False
-
 
 class NameStruct:
     """Name struct to help with managing individual names.
@@ -176,11 +165,15 @@ class NameManager:
         return [self.bk.names(nm).refers_to for nm in nms]
 
     def get_ref_err_nms_to_delete(self, nms):
-        refers_to_list = self.convert_nr_names_to_refers_to(nms)
-        return [nm for nm, refers_to in zip(nms, refers_to_list) if refers_to_is_ref_err(refers_to)]
+        return nm_helper.get_list_of_ref_err_nms(self.bk)
 
     def get_list_of_potential_names(self, sht_nm, sht_type):
         return rng_getters.get_names_and_addresses(self.bk.sheets[sht_nm], sht_type)
+
+    def delete_all_ref_error_nm_rngs(self):
+        delete_nms = nm_helper.get_list_of_ref_err_nms(self.bk)
+        for delete_nm in delete_nms:
+            self.bk.names(delete_nm).delete()
 
     def handle_all_naming_cases(self, potential_nms_and_refs, all_nms, all_tracked_nms):
 

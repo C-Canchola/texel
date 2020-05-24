@@ -6,6 +6,7 @@ from texel.book import get_sheet, get_names_of_sheets
 from texel.constants import Color
 from texel.api.types import sheet_types
 
+
 def format_after_call(func):
 
     @wraps(func)
@@ -19,6 +20,43 @@ def format_after_call(func):
     return inner_func
 
 
+def get_key_sheet_index(sht: xw.Sheet) -> str:
+    """Function to return the =SHEET(cell) formula
+    that will provide a reference to a sheet.
+    This will provide the ability to determine if a sheet
+    has been deleted or renamed when its name listed on the SheetTracker
+    tab is not found anywhere in the workbook.
+
+
+    Arguments:
+        sht {xw.Sheet} -- Sheet added to SheetTracker
+
+    Returns:
+        str -- Formula to be embedded into sheet_index column
+    """
+    return '=SHEET({})'.format(sht.cells[0, 0].get_address(include_sheetname=True))
+
+
+def sht_nm_must_exist(func):
+    """Decorator to ensure that a sheet name is present when attempting to add.
+
+    Raises:
+        KeyError: Sheet name is not in current workbook.
+
+
+    """
+    @wraps(func)
+    def inner_func(self, sht_nm, *args, **kwargs):
+        sht_nms = [sht.name for sht in self._bk.sheets]
+        if sht_nm not in sht_nms:
+            raise KeyError(
+                '{} is not found in this workbook. Please add it manually before attempting to track it.')
+
+        return func(self, sht_nm, *args, **kwargs)
+
+    return inner_func
+
+
 class SheetTracker:
 
     SHEET_NAME = 'TXL_SHEET_TRACKER'
@@ -26,8 +64,9 @@ class SheetTracker:
     KEY_SHEET_NAME = 'sheet_name'
     KEY_DESCR = 'descr'
     KEY_TYPE = 'sheet_type'
+    KEY_SHEET_INDEX = 'sheet_index'
 
-    KEYS = [KEY_SHEET_NAME, KEY_DESCR, KEY_TYPE]
+    KEYS = [KEY_SHEET_NAME, KEY_DESCR, KEY_TYPE, KEY_SHEET_INDEX]
 
     def __init__(self, bk: xw.Book):
         self._bk = bk
@@ -71,10 +110,13 @@ class SheetTracker:
 
         self._update_info_df(df)
 
+    @sht_nm_must_exist
     def add_sheet(self, sht_nm: str, descr: str, sht_type: sheet_types.SheetType):
         """Adds a sheet to the tracker sheeet.
         If the sheet name does not exist, a new sheet will be added to the entire workbook.
-
+        TODO
+        Only existing sheets should be allowed to be tracked.
+        Handling the adding of sheets to a workbook does not add anything and adds much undesired complexity.
         Arguments:
             sht_nm {str} -- name of sheet to ad.
             descr {str} -- description of sheet.
@@ -85,13 +127,15 @@ class SheetTracker:
         if len(df[df[SheetTracker.KEY_SHEET_NAME] == sht_nm]):
             return self._bk.sheets[sht_nm]
 
+        sht = get_sheet(self._bk, sht_nm)
+
         add_df = pd.DataFrame.from_records(
-            [(sht_nm, descr, sht_type.index)], columns=SheetTracker.KEYS)
+            [(sht_nm, descr, sht_type.index, get_key_sheet_index(sht))], columns=SheetTracker.KEYS)
         df = pd.concat([df, add_df])
 
         self._update_info_df(df)
 
-        return get_sheet(self._bk, sht_nm)
+        return sht
 
     def _sht_nm_bool_series(self, df, sht_nm):
         return df[SheetTracker.KEY_SHEET_NAME] == sht_nm

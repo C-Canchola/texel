@@ -1,5 +1,30 @@
 import xlwings as xw
 
+REF_ERROR_SUBSTRS = ['=#REF', '!#REF']
+
+
+def refers_to_is_ref_err(refers_to_str):
+
+    for substr in REF_ERROR_SUBSTRS:
+        if substr in refers_to_str:
+            return True
+
+    return False
+
+
+def get_list_of_ref_err_nms(bk: xw.Book) -> list:
+    """Given an xw.Book, return a list of nr name strings which
+    refer to a reference error/non existent range.
+
+    Arguments:
+        bk {xw.Book} -- xw.Book
+
+    Returns:
+        list -- named range names which refer to non-existent ranges.
+    """
+
+    return [nm.name for nm in bk.names if refers_to_is_ref_err(nm.refers_to)]
+
 
 def book_name_strings(bk):
     """Returns a list of the named range names in

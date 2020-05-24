@@ -1,6 +1,6 @@
 import xlwings as xw
 import texel.naming as txl_nm
-from texel.api import SheetTracker
+from texel.api.sheet_tracker import SheetTracker
 from texel.api.name_manager import NameManager
 from texel.api.types import sheet_types
 from more_itertools import flatten
@@ -56,7 +56,8 @@ class TexlBook:
 
     def update_all_names(self):
 
-        self.delete_ref_err_nms()
+        self._name_manager.delete_all_ref_error_nm_rngs()
+
         potential_nm_list = self.get_all_potential_nms()
         all_nms = all_bk_nm_strs(self.bk)
         all_tracked_nms = self._get_all_tracked_nr_nms()
