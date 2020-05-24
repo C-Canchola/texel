@@ -18,3 +18,21 @@ TO ADD:
 When adding a sheet, include the formula =SHEET(first_cell of sheet) in order to keep strack if the
 sheet exists and whether or not their names match what is given.
     -- Essentially a way to keep a pointer/reference to a sheet by using Excel itself.
+
+
+Formula formatting
+
+Coloring
+
+Index tracking.
+
+Archive functionality (just quick saving essentially, will be easy)
+
+Logging - Track changes such as index setting, named range changes (add, rename, swaps, deletions)
+
+Name rules - How to handle column headings that do not adhere to the rules needed to add a range as name.
+    - How much flexibility should be allowed when building workbooks with texel?
+    -- Should names be FORCED to abide by naming conventions?
+    -- Should conversion on the backend happen for every case?
+    -- Should it be a mix? e.g. Force naming convention of CAPITAL_SHEET_NAME__variable_name but conversion for things such as special characters?
+    
