@@ -1,5 +1,6 @@
 import xlwings as xw
 import pandas as pd
+import texel.naming.helpers as nm_helper
 
 from functools import wraps
 from texel.book import get_sheet, get_names_of_sheets
@@ -18,6 +19,54 @@ def format_after_call(func):
         return ret_val
 
     return inner_func
+
+
+def get_key_sht_index_factory(bk: xw.Book):
+
+    def inner_func(sht_nm):
+        return get_key_sheet_index(bk.sheets[sht_nm])
+
+    return inner_func
+
+
+def remap_sheet_index_formula(df: pd.DataFrame, bk: xw.Book):
+    df[SheetTracker.KEY_SHEET_INDEX] = df[SheetTracker.KEY_SHEET_NAME].map(
+        get_key_sht_index_factory(bk))
+
+    return df
+
+
+def ensure_sheet_name_index_match(func):
+
+    @wraps(func)
+    def inner_func(self, *args, **kwargs):
+
+        df = non_instanced_get_info_df(self)
+        df = df[~df[SheetTracker.KEY_SHEET_INDEX].isna()]
+
+        name_map = {int(index): self._bk.sheets[int(index) - 1].name
+                    for index in df['sheet_index'].values}
+
+        df[SheetTracker.KEY_SHEET_NAME] = df[SheetTracker.KEY_SHEET_INDEX].map(
+            name_map)
+        df = remap_sheet_index_formula(df, self._bk)
+        non_instanced_update_info_df(self, df)
+
+        return func(self, *args, **kwargs)
+
+    return inner_func
+
+
+def non_instanced_get_info_df(sheet_tracker):
+
+    return sheet_tracker._sht.range('A1').current_region.options(
+        pd.DataFrame, index=False).value
+
+
+def non_instanced_update_info_df(sheet_tracker, df):
+    sheet_tracker._sht.range('A1').current_region.value = None
+    sheet_tracker._sht.range('A1').options(
+        pd.DataFrame, index=False).value = df
 
 
 def get_key_sheet_index(sht: xw.Sheet) -> str:
@@ -50,7 +99,7 @@ def sht_nm_must_exist(func):
         sht_nms = [sht.name for sht in self._bk.sheets]
         if sht_nm not in sht_nms:
             raise KeyError(
-                '{} is not found in this workbook. Please add it manually before attempting to track it.')
+                '{} is not found in this workbook. Please add it manually before attempting to track it.'.format(sht_nm))
 
         return func(self, sht_nm, *args, **kwargs)
 
@@ -114,9 +163,7 @@ class SheetTracker:
     def add_sheet(self, sht_nm: str, descr: str, sht_type: sheet_types.SheetType):
         """Adds a sheet to the tracker sheeet.
         If the sheet name does not exist, a new sheet will be added to the entire workbook.
-        TODO
-        Only existing sheets should be allowed to be tracked.
-        Handling the adding of sheets to a workbook does not add anything and adds much undesired complexity.
+
         Arguments:
             sht_nm {str} -- name of sheet to ad.
             descr {str} -- description of sheet.
@@ -125,6 +172,7 @@ class SheetTracker:
         df = self._get_info_df()
 
         if len(df[df[SheetTracker.KEY_SHEET_NAME] == sht_nm]):
+            self._update_info_df(df)
             return self._bk.sheets[sht_nm]
 
         sht = get_sheet(self._bk, sht_nm)
@@ -164,8 +212,11 @@ class SheetTracker:
     @format_after_call
     def _update_info_df(self, df):
         self._sht.range('a1').current_region.value = None
-        self._sht.range('a1').options(pd.DataFrame, index=False).value = df
+        df = remap_sheet_index_formula(df, self._bk)
+        self._sht.range('a1').options(
+            pd.DataFrame, index=False).value = df
 
+    @ensure_sheet_name_index_match
     def _get_info_df(self) -> pd.DataFrame:
         return self._sht.range('a1').current_region.options(pd.DataFrame, index=False).value
 

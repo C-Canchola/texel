@@ -12,6 +12,8 @@ add_nm_by_addr = txl_nm.add_named_range_from_addr
 
 class TexlBook:
 
+    SHEET_TYPE = sheet_types
+
     def __init__(self, bk: xw.Book):
 
         self.bk = bk
