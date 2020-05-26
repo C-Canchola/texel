@@ -21,3 +21,20 @@ def get_entire_sheet_column(sht: xw.Sheet, col_index: int) -> xw.Range:
 
 
 # %%
+def create_hyperlink_to_other_cell(src_cell: xw.Range, dst_cell: xw.Range, friendly_nm: str):
+    """Creates a hyperlink formula in scr_cell to dst_cell with the given
+    friendly_nm being the text displayed.
+
+    Arguments:
+        src_cell {xw.Range} -- cell which will contain the hyperlink.
+        dst_cell {xw.Range} -- cell which the hyperlink will lead to.
+        friendly_nm {str} -- text of hyperlink
+    """
+    link_location = '"#{}"'.format(
+        dst_cell.get_address(include_sheetname=True))
+    friendly_nm = '"{}"'.format(friendly_nm.replace('"', ''))
+
+    src_cell.formula = '=HYPERLINK({}, {})'.format(link_location, friendly_nm)
+
+
+# %%
