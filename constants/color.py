@@ -10,5 +10,5 @@ class Color:
     TXL = utils.rgb_to_int((53, 81, 133))
     BACKGROUND = utils.rgb_to_int((237, 242, 244))
     LIGHT_TEXT = BACKGROUND
-
-
+    GREEN = utils.rgb_to_int((235, 241, 222))
+    USED_IDENTIFIER = GREEN
