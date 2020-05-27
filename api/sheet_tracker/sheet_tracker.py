@@ -239,7 +239,7 @@ class SheetTracker:
     def activate(self):
         self._sht.activate()
 
-    def print_sheet_info(self):
+    def print_tracking_sheet_info(self):
         df: pd.DataFrame = self._get_info_df()
 
         for i in range(len(df)):
@@ -248,3 +248,25 @@ class SheetTracker:
     def get_sheet_name_and_type_dict(self):
         df: pd.DataFrame = self._get_info_df()
         return dict(zip(df[SheetTracker.KEY_SHEET_NAME], df[SheetTracker.KEY_TYPE]))
+
+    def log_sheet_status(self):
+        print('TRACKED SHEETS:')
+        self.print_tracking_sheet_info()
+
+        all_sheet_dict = {}
+        all_sheet_dict['visible'] = []
+        all_sheet_dict['hidden'] = []
+
+        for index, sht in enumerate(self._bk.sheets):
+            if sht.api.visible == -1:
+                all_sheet_dict['visible'].append((index, sht.name))
+            if sht.api.visible == 0:
+                all_sheet_dict['hidden'].append((index, sht.name))
+
+        print('\nVisible Sheets:')
+        for index, sht_nm in all_sheet_dict['visible']:
+            print(index, sht_nm)
+
+        print('\nHideen Sheets:')
+        for index, sht_nm in all_sheet_dict['hidden']:
+            print(index, sht_nm)
