@@ -27,7 +27,7 @@ class TexlBook:
         self.rename_sht = self._sheet_tracker.rename_sheet
         self._get_sheet_and_type_dict = self._sheet_tracker.get_sheet_name_and_type_dict
 
-    def add_sheet_to_track(self, sht_nm: str, sht_descr: str, sht_type: TexlBook.SHEET_TYPE):
+    def add_sheet_to_track(self, sht_nm: str, sht_descr: str, sht_type:SHEET_TYPE):
         """Adds a sheet to track my name.
 
         This sheet will be tracked by what is essentially an excel pointer.
