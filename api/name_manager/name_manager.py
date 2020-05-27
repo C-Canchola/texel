@@ -1,7 +1,6 @@
 import xlwings as xw
-import texel.naming as txl_nm
-import texel.api.name_manager.range_getters as rng_getters
-import texel.naming.helpers as nm_helper
+from ...naming import helpers as nm_helper
+from ..name_manager import range_getters as rng_getters
 
 
 class NameStruct:

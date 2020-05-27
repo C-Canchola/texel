@@ -1,6 +1,6 @@
 import xlwings as xw
-import texel.naming as txl_nm
-import texel.api.types.sheet_types as txl_sht_types
+from ... import naming as txl_nm
+from ..types import sheet_types as txl_sht_types
 
 from functools import wraps
 

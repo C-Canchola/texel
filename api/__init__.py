@@ -1,1 +1,1 @@
-from texel.api.book import TexlBook
+from .book import TexlBook

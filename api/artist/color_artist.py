@@ -1,8 +1,11 @@
 import xlwings as xw
-import texel.api.types.sheet_types as txl_sht_types
+
 from functools import wraps
-from texel.constants.color import Color
-from texel.formatting import sheet_fmt
+
+from ..types import sheet_types as txl_sht_types
+
+from ...constants import Color
+from ...formatting import sheet_fmt
 
 
 def _get_first_sht_row(sht: xw.Sheet):

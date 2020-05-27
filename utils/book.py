@@ -1,6 +1,6 @@
 import os
 import xlwings as xw
-from texel.utils.decorators import create_active_app
+from ..utils.decorators import create_active_app
 # %%
 
 
@@ -26,5 +26,5 @@ def get_bk(bk_str, **kwargs):
 
     if bk_str in [bk.fullname for bk in bks]:
         return bks[os.path.split(bk_str)[-1]]
-        
+
     return app.books.open(bk_str, **kwargs)

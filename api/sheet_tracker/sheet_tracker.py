@@ -1,12 +1,14 @@
 import xlwings as xw
 import pandas as pd
-import texel.naming.helpers as nm_helper
 
 from functools import wraps
-from texel.book import get_sheet, get_names_of_sheets
-from texel.constants import Color
-from texel.api.types import sheet_types
-from texel.formatting import (
+
+from ...naming import helpers as nm_helper
+from ...book import get_sheet, get_names_of_sheets
+from ...constants import Color
+from ..types import sheet_types
+
+from ...formatting import (
     sheet_fmt, range_fmt
 )
 

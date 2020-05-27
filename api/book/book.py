@@ -1,11 +1,14 @@
 import xlwings as xw
-import texel.naming as txl_nm
 
-from texel.api.sheet_tracker import SheetTracker
-from texel.api.name_manager import NameManager
-from texel.api.types import sheet_types
-from texel.api.artist import ColorArtist
 from more_itertools import flatten
+
+from ..sheet_tracker import SheetTracker
+from ..name_manager import NameManager
+from ..types import sheet_types
+from ..artist import ColorArtist
+from ..tasks import task_manager as _task_manager
+
+from ... import naming as txl_nm
 
 nm_sht_filter = txl_nm.book_name_strings_with_sheet_name_filter
 all_bk_nm_strs = txl_nm.book_name_strings
@@ -21,13 +24,27 @@ class TexlBook:
         self.bk = bk
         self._sheet_tracker = SheetTracker(self.bk)
         self._name_manager = NameManager(self.bk)
-        self.add_sheet_to_track = self._sheet_tracker.add_sheet
         self.rename_sht = self._sheet_tracker.rename_sheet
-        self.get_sheet_and_type_dict = self._sheet_tracker.get_sheet_name_and_type_dict
+        self._get_sheet_and_type_dict = self._sheet_tracker.get_sheet_name_and_type_dict
+
+    def add_sheet_to_track(self, sht_nm: str, sht_descr: str, sht_type: TexlBook.SHEET_TYPE):
+        """Adds a sheet to track my name.
+
+        This sheet will be tracked by what is essentially an excel pointer.
+        A formula will directly reference the sheet so that it will always stay in sync
+        with any user udpates or deletions.
+
+
+        Arguments:
+            sht_nm {str} -- name of sheet to add.
+            sht_descr {str} -- description of sheet to display on the sheet tracker.
+            sht_type {TexlBook.SHEET_TYPE} -- Sheet type. Will determine formatting and naming rules.
+        """
+        self._sheet_tracker.add_sheet(sht_nm, sht_descr, sht_type)
 
     def _get_sht_name_and_nr_nm_dict(self) -> dict:
 
-        return {sht_nm: nm_sht_filter(self.bk, sht_nm) for sht_nm in self.get_sheet_and_type_dict()}
+        return {sht_nm: nm_sht_filter(self.bk, sht_nm) for sht_nm in self._get_sheet_and_type_dict()}
 
     def _get_all_tracked_nr_nms(self) -> list:
         return list(flatten(self._get_sht_name_and_nr_nm_dict().values()))
@@ -47,7 +64,7 @@ class TexlBook:
 
     def get_sht_potential_nms(self) -> dict:
         return {sht_nm: self._name_manager.get_list_of_potential_names(sht_nm, int(sht_type))
-                for sht_nm, sht_type in self.get_sheet_and_type_dict().items()}
+                for sht_nm, sht_type in self._get_sheet_and_type_dict().items()}
 
     def get_all_potential_nms(self):
         return list(flatten(self.get_sht_potential_nms().values()))
@@ -62,7 +79,7 @@ class TexlBook:
 
     def color_all_sheets(self):
 
-        for sht_nm, sht_type in self.get_sheet_and_type_dict().items():
+        for sht_nm, sht_type in self._get_sheet_and_type_dict().items():
             ColorArtist.color_typed_sheet(self.bk.sheets[sht_nm], sht_type)
 
     def update_all_names(self):
