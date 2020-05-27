@@ -69,7 +69,7 @@ def color_column_calc_sht(sht: xw.Sheet):
 
         if str(header_cell.value).lower().startswith('used_'):
             header_cell.color = Color.USED_IDENTIFIER
-        if 'index' in str(header_cell.value).lower():
+        elif 'index' in str(header_cell.value).lower():
             header_cell.color = Color.INDEX
         elif value_cell.value is None:
             header_cell.color = Color.INPUT
