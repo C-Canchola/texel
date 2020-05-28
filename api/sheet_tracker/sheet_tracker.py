@@ -3,14 +3,24 @@ import pandas as pd
 
 from functools import wraps
 
+from ..types import sheet_types
+
+
 from ...naming import helpers as nm_helper
 from ...book import get_sheet, get_names_of_sheets
 from ...constants import Color
-from ..types import sheet_types
-
+from ...range.helpers import create_hyperlink_to_ext_resource
 from ...formatting import (
     sheet_fmt, range_fmt
 )
+
+_github_link = '"https://github.com/C-Canchola/texel"'
+_github_msg = '"This workbook was created with the help of the python library texel."'
+
+
+def _get_hyperlink_addr():
+    col_index = len(SheetTracker.KEYS)
+    return '{}1'.format(xw.utils.col_name(col_index+1))
 
 
 def format_after_call(func):
@@ -39,6 +49,36 @@ def remap_sheet_index_formula(df: pd.DataFrame, bk: xw.Book):
         get_key_sht_index_factory(bk))
 
     return df
+
+
+def add_github_link_dec(func):
+
+    @wraps(func)
+    def inner_func(self, *args, **kwargs):
+
+        ret_val = func(self, *args, **kwargs)
+
+        hyperlink_cell = self._sht.range(_get_hyperlink_addr())
+
+        create_hyperlink_to_ext_resource(
+            hyperlink_cell, _github_link, _github_msg)
+        print(hyperlink_cell)
+        return ret_val
+
+    return inner_func
+
+
+def remove_github_link_dec(func):
+
+    @wraps(func)
+    def inner_func(self, *args, **kwargs):
+        col_len = len(SheetTracker.KEYS)
+
+        self._sht.range(_get_hyperlink_addr()).value = None
+
+        return func(self, *args, **kwargs)
+
+    return inner_func
 
 
 def ensure_sheet_name_index_match(func):
@@ -125,6 +165,7 @@ class SheetTracker:
     def __init__(self, bk: xw.Book):
         self._bk = bk
         self._sht = self._set_sheet()
+
         self._init_sheet()
 
     def _set_sheet(self):
@@ -225,6 +266,7 @@ class SheetTracker:
 
         self._bk.sheets[original_nm].name = new_nm
 
+    @add_github_link_dec
     @format_after_call
     def _update_info_df(self, df):
         self._sht.range('a1').current_region.value = None
@@ -232,6 +274,8 @@ class SheetTracker:
         self._sht.range('a1').options(
             pd.DataFrame, index=False).value = df
 
+    @add_github_link_dec
+    @remove_github_link_dec
     @ensure_sheet_name_index_match
     def _get_info_df(self) -> pd.DataFrame:
         return self._sht.range('a1').current_region.options(pd.DataFrame, index=False).value

@@ -22,7 +22,7 @@ def get_entire_sheet_column(sht: xw.Sheet, col_index: int) -> xw.Range:
 
 # %%
 def create_hyperlink_to_other_cell(src_cell: xw.Range, dst_cell: xw.Range, friendly_nm: str):
-    """Creates a hyperlink formula in scr_cell to dst_cell with the given
+    """Creates a hyperlink formula in src_cell to dst_cell with the given
     friendly_nm being the text displayed.
 
     Arguments:
@@ -38,3 +38,13 @@ def create_hyperlink_to_other_cell(src_cell: xw.Range, dst_cell: xw.Range, frien
 
 
 # %%
+def create_hyperlink_to_ext_resource(src_cell: xw.Range, resource_link: str, friendly_nm: str):
+    """Creates a hyperlink formula in src_cell to external resource with given friendly_nm
+    being the text displayed.
+
+    Arguments:
+        src_cell {xw.Range} -- cell contining hyperlink
+        resource_link {str} -- resource link
+        friendly_nm {str} -- text to display for hyperlink
+    """
+    src_cell.formula = '=HYPERLINK({}, {})'.format(resource_link, friendly_nm)
