@@ -136,7 +136,7 @@ class TexlBook:
     def unhide_all_sheets(self):
         """Unhides every sheet in the workbook.
         """
-        _task_manager.unhide_all_sheets()
+        _task_manager.unhide_all_sheets(self.bk)
 
     def active_sheet_by_name(self, sht_nm):
         """Activates to sheet by name.

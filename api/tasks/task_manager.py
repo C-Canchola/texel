@@ -29,7 +29,7 @@ def hide_sheets_not_in_list(bk: xw.Book, nm_list):
 def unhide_all_sheets(bk: xw.Book):
 
     for sht in bk.sheets:
-        bk.api.visible = -1
+        sht.api.visible = -1
 
 
 def memo_sht_visible(bk: xw.Book):
