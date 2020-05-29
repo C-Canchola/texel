@@ -1,22 +1,4 @@
-Idea for pipeline of changes.
-
-VALIDATION/RULE SET - This is where I will apply naming conventions, validation, etc to any changes to
-either worksheets or the named ranges.
-
-SHEET_TRACKER - This will handle any changes to the worksheets.
-
-NAME_MANAGER - This will have to respond to changes made by the SHEET_TRACKER as well as handle the ability to change at a lower level.
-
-
 TO ADD:
-
-Add easy to use navigation and console logging to make traversing a complex spreadsheet more fluid.
-
-When adding a sheet, include the formula =SHEET(first_cell of sheet) in order to keep strack if the
-sheet exists and whether or not their names match what is given.
-    -- Essentially a way to keep a pointer/reference to a sheet by using Excel itself.
-    -- THIS WILL BE VERY USEFUL FOR HANDLING SHEET RENAMES
-
 Add Two Dimensional Look Up Sheet as a Sheet Type.
     -- How will I handle the naming of this?
     -- In past versions of naming methodologies, it was done by a function that allowed the names to be set by string.
@@ -24,23 +6,48 @@ Add Two Dimensional Look Up Sheet as a Sheet Type.
     --- I'm thinking since a two dimensional look up sheet will ALWAYS only have three named ranges (row, column, data),
         Everything will always be a rename, unless a sheet is added or deleted.
 
+Add External Input/Data Dump as a Sheet type.
+    -- A more proper term is hardcoded values that are calculated from an external sources
+        that are not meant to be changed IN the current workbook.
+
 
 Formula formatting
     - Probably use parser provided by openpyxl to help with spacing/indenting/leveling.
+    - VERY HIGH UP ON PRIORITY LIST.
 
 Coloring
-    - Will be easy but not complete until index tracking is implemented.
+    - More coloring rules.
+    - Examplse of current ones in place.
+        -- column headers with the word "used" are colored green implying they are important values to another tab.
+        -- column headers with index are colored grey to imply they are the join columns of other tabs.
+        -- formulas are blue and hardcoded values are orange.
+    
+Documentation/Guidelines
+    - Some sort of document that explains intended practices such as.
+        -- Helper columns very specific to helping with the specific sheet are spaced to the right
+            so they are not named by the name manager. Think private variables in a module/class.
+            Only useful for implementation of that module/class and other modules/classes should not even
+            know that they exist. E N C A P S U L A T I O N.
+        -- indexes should be the leftmost columns and continuous. if a multi index to be used as a look up,
+            they should be concatenated and prefixed with index_ with the rest being their concatenated keys
+            in the order they are joined
+        -- indexes should all be prefixed with index_. When searching for a named range on a sheet, you do not
+            need to know the name, but it's type to see the list of possible indicies.
+        -- prefix important columns with used_ so that easy access to "public" attributes are easily identified.
 
-Index tracking.
-    - Probably the most complex feature up with Naming rules/validation.
-    - Not sure if it provides as much value for the effort required.
 
 
 Archive functionality (just quick saving essentially, will be easy)
 
 Logging - Track changes such as index setting, named range changes (add, rename, swaps, deletions)
+    - LOW PRIORITY
+
 
 Name rules - How to handle column headings that do not adhere to the rules needed to add a range as name.
+    - Not sure on priorty. Someone who names their sheets and column headings will have little use for this.
+    - The primary benefit someone could get it who names their variables defined (sometime in the future hopefully)
+        already, would be not having to rename values in spreadsheets received from others.
+    
     - Will probably use openpxyl parser to help determine valid named range names.
 
     - How much flexibility should be allowed when building workbooks with texel?
