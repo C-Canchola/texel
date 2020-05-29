@@ -14,6 +14,7 @@ Add External Input/Data Dump as a Sheet type.
 Formula formatting
     - Probably use parser provided by openpyxl to help with spacing/indenting/leveling.
     - VERY HIGH UP ON PRIORITY LIST.
+    - READABILITY COUNTS. IM SO SORRY TO ANYONE THAT HAS RECEIVED SOME DEEPLY NESTED IF/IFERROR INDEX MATCH MADNESS FROM ME. IF I KNEW HOW TO DO THINGS BETTER IN EXCEL I WOULD DO SO.
 
 Coloring
     - More coloring rules.
