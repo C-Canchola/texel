@@ -39,7 +39,7 @@ class TexlBook:
 
         This sheet will be tracked by what is essentially an excel pointer.
         A formula will directly reference the sheet so that it will always stay in sync
-        with any user udpates or deletions.
+        with any user updates or deletions.
 
 
         Arguments:

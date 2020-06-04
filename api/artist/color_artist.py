@@ -2,6 +2,8 @@ import xlwings as xw
 
 from functools import wraps
 
+from ..decorators import stop_on_empty_first_cell as _stop_on_empty_first_cell
+
 from ..types import sheet_types as txl_sht_types
 
 from ...constants import Color
@@ -16,9 +18,7 @@ _SHEET_COLOR_FUNCS = {}
 
 
 def register_sheet_color_func(sht_type, tab_color):
-
     def decorator(func):
-
         @wraps(func)
         def inner_func(sht, *args, **kwargs):
             sheet_fmt.color_sht_tab(sht, tab_color)
@@ -31,21 +31,9 @@ def register_sheet_color_func(sht_type, tab_color):
     return decorator
 
 
-def _stop_on_empty_first_cell(func):
-
-    @wraps(func)
-    def inner_func(sht, *args, **kwargs):
-        if sht.range('a1').value is None:
-            return
-
-        return func(sht, *args, **kwargs)
-    return inner_func
-
-
 @register_sheet_color_func(txl_sht_types.SCALAR_INPUT, Color.INPUT)
 @_stop_on_empty_first_cell
 def color_input_sht(sht: xw.Sheet):
-
     input_row = _get_first_sht_row(sht)
     input_row.color = Color.INPUT
 
