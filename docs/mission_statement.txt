@@ -9,7 +9,7 @@ Essential Readings:
     - Clean Architecture by Bob Martin
     - The Zen of Python
 
-Core princicples of texel borrowed from the essential readings.
+Core princicples of texel borrowed (stolen?) from the essential readings.
     
     From the Zen of Python:
     - Beautiful is better than ugly.

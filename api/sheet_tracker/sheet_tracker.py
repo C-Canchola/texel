@@ -3,10 +3,10 @@ import pandas as pd
 
 from functools import wraps
 
+from . import initializers
+
 from ..types import sheet_types
 
-
-from ...naming import helpers as nm_helper
 from ...book import get_sheet, get_names_of_sheets
 from ...constants import Color
 from ...range.helpers import create_hyperlink_to_ext_resource
@@ -62,7 +62,7 @@ def add_github_link_dec(func):
 
         create_hyperlink_to_ext_resource(
             hyperlink_cell, _github_link, _github_msg)
-        print(hyperlink_cell)
+
         return ret_val
 
     return inner_func
@@ -159,8 +159,12 @@ class SheetTracker:
     KEY_DESCR = 'descr'
     KEY_TYPE = 'sheet_type'
     KEY_SHEET_INDEX = 'sheet_index'
+    KEY_ROW_FOR_TWO_DIM = 'two_dim_row_label'
+    KEY_COL_FOR_TWO_DIM = 'two_dim_col_label'
+    KEY_DATA_FOR_TWO_DIM = 'two_dim_data_label'
 
-    KEYS = [KEY_SHEET_NAME, KEY_DESCR, KEY_TYPE, KEY_SHEET_INDEX]
+    KEYS = [KEY_SHEET_NAME, KEY_DESCR, KEY_TYPE, KEY_SHEET_INDEX,
+            KEY_ROW_FOR_TWO_DIM, KEY_COL_FOR_TWO_DIM, KEY_DATA_FOR_TWO_DIM]
 
     def __init__(self, bk: xw.Book):
         self._bk = bk
@@ -217,8 +221,8 @@ class SheetTracker:
         self._update_info_df(df)
 
     @sht_nm_must_exist
-    def add_sheet(self, sht_nm: str, descr: str, sht_type: sheet_types.SheetType):
-        """Adds a sheet to the tracker sheeet.
+    def add_sheet(self, sht_nm: str, descr: str, sht_type: sheet_types.SheetType, **kwargs):
+        """Adds a sheet to the tracker sheet.
         If the sheet name does not exist, a new sheet will be added to the entire workbook.
 
         Arguments:
@@ -233,11 +237,13 @@ class SheetTracker:
             return self._bk.sheets[sht_nm]
 
         sht = get_sheet(self._bk, sht_nm)
+        row_label, col_label, data_label = initializers.get_data_labels_for_sheet_addition(sht_type, **kwargs)
 
         add_df = pd.DataFrame.from_records(
-            [(sht_nm, descr, sht_type.index, get_key_sheet_index(sht))], columns=SheetTracker.KEYS)
-        df = pd.concat([df, add_df])
+            [(sht_nm, descr, sht_type.index, get_key_sheet_index(sht),
+              row_label, col_label, data_label)], columns=SheetTracker.KEYS)
 
+        df = pd.concat([df, add_df])
         self._update_info_df(df)
 
         return sht
@@ -297,9 +303,7 @@ class SheetTracker:
         print('TRACKED SHEETS:')
         self.print_tracking_sheet_info()
 
-        all_sheet_dict = {}
-        all_sheet_dict['visible'] = []
-        all_sheet_dict['hidden'] = []
+        all_sheet_dict = {'visible': [], 'hidden': []}
 
         for index, sht in enumerate(self._bk.sheets):
             if sht.api.visible == -1:

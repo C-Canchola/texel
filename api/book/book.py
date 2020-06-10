@@ -5,8 +5,9 @@ from more_itertools import flatten
 from ..sheet_tracker import SheetTracker
 from ..name_manager import NameManager
 from ..types import sheet_types
-from ..artist import ColorArtist
+from ..artists import ColorArtist
 from ..tasks import task_manager
+from ..xl_fmt import formula_formatter
 
 from ... import naming as txl_nm
 
@@ -19,7 +20,6 @@ _task_manager = task_manager
 
 
 class TexlBook:
-
     SHEET_TYPE = sheet_types
 
     def __init__(self, bk: xw.Book):
@@ -34,7 +34,25 @@ class TexlBook:
         self._initial_sheet_visible_func = task_manager.memo_sht_visible(
             self.bk)
 
-    def add_sheet_to_track(self, sht_nm: str, sht_descr: str, sht_type: SHEET_TYPE):
+    def add_two_dimensional_look_up_sheet_to_track(self, sht_nm, sht_descr: str, row_label: str,
+                                                   col_label: str, data_label: str):
+        """
+        Convenience method to add two dimensional look up as its creation requires more initial
+        information to correctly handle the naming of ranges.
+        Args:
+            sht_nm (str): name of sheet to add. Must Exist in the workbook.
+            sht_descr (str): description of the sheet and its purpose.
+            row_label (str): label of row in two dim sheet.
+            col_label (str): label of col in two dim sheet.
+            data_label (str): label for the data in two dim sheet.
+
+        Returns:
+
+        """
+        self.add_sheet_to_track(sht_nm, sht_descr, sheet_types.TWO_DIMENSIONAL_LOOK_UP, row_label=row_label,
+                                col_label=col_label, data_label=data_label)
+
+    def add_sheet_to_track(self, sht_nm: str, sht_descr: str, sht_type: SHEET_TYPE, **kwargs):
         """Adds a sheet to track my name.
 
         This sheet will be tracked by what is essentially an excel pointer.
@@ -47,7 +65,7 @@ class TexlBook:
             sht_descr {str} -- description of sheet to display on the sheet tracker.
             sht_type {TexlBook.SHEET_TYPE} -- Sheet type. Will determine formatting and naming rules.
         """
-        self._sheet_tracker.add_sheet(sht_nm, sht_descr, sht_type)
+        self._sheet_tracker.add_sheet(sht_nm, sht_descr, sht_type, **kwargs)
 
     def _get_sht_name_and_nr_nm_dict(self) -> dict:
 
@@ -83,6 +101,16 @@ class TexlBook:
         """
         self.update_all_names()
         self.color_all_sheets()
+
+    def format_sheet_formulas(self):
+        """
+        Formats the formulas of the registered sheets based upon their sheet type.
+
+        Returns:None
+
+        """
+        for sht_nm, sht_type in self._get_sheet_and_type_dict().items():
+            formula_formatter.format_typed_sheet_formulas(self.bk.sheets[sht_nm], sht_type)
 
     def color_all_sheets(self):
         """Applies coloring to tracked sheets.

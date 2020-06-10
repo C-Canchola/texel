@@ -14,11 +14,14 @@ Add External Input/Data Dump as a Sheet type.
 Formula formatting
     - Probably use parser provided by openpyxl to help with spacing/indenting/leveling.
     - VERY HIGH UP ON PRIORITY LIST.
-    - READABILITY COUNTS. IM SO SORRY TO ANYONE THAT HAS RECEIVED SOME DEEPLY NESTED IF/IFERROR INDEX MATCH MADNESS FROM ME. IF I KNEW HOW TO DO THINGS BETTER IN EXCEL I WOULD DO SO.
+    - READABILITY COUNTS. IM SO SORRY TO ANYONE THAT HAS RECEIVED SOME DEEPLY NESTED IF/IFERROR INDEX MAT(R)CH MADNESS FROM ME. IF I KNEW HOW TO DO THINGS BETTER IN EXCEL I WOULD DO SO.
+    -- 6-3-2020 UPDATE:
+        --- If(cond, true_result, false_result) has been formatted to read more like
+            traditional programming conditional statements.
 
 Coloring
     - More coloring rules.
-    - Examplse of current ones in place.
+    - Examples of current ones in place.
         -- column headers with the word "used" are colored green implying they are important values to another tab.
         -- column headers with index are colored grey to imply they are the join columns of other tabs.
         -- formulas are blue and hardcoded values are orange.

@@ -6,7 +6,8 @@ from openpyxl.formula.tokenizer import (
 )
 
 
-def apply_formula_spacing(formula: str) -> str:
+
+def get_spaced_formula(formula: str) -> str:
     """
     Applies formula spacing to improve readability of excel formulas.
     A wise man once said, flat is better than nested.
